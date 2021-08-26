@@ -29,7 +29,7 @@ class SnackListViewTest(TestCase):
         self.assertTemplateUsed(response, "base.html")
 
 
-class SnackDetailsView(TestCase):
+class SnackDetailsViewTest(TestCase):
     def setUp(self):
         self.user = User.objects.create_user(username="tester", email="tester@gmail.com", password="pass")
         self.new_snack = Snack.objects.create(name="Cheetos", description="cheesy", purchaser=self.user)
