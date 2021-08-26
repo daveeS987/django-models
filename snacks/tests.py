@@ -1,4 +1,3 @@
-from django.http import response
 from django.test import TestCase
 from django.contrib.auth.models import User
 from django.urls import reverse
@@ -28,3 +27,25 @@ class SnackListViewTest(TestCase):
         response = self.client.get(url)
         self.assertTemplateUsed(response, "snack_list.html")
         self.assertTemplateUsed(response, "base.html")
+
+
+class SnackDetailsView(TestCase):
+    def setUp(self):
+        self.user = User.objects.create_user(username="tester", email="tester@gmail.com", password="pass")
+        self.new_snack = Snack.objects.create(name="Cheetos", description="cheesy", purchaser=self.user)
+
+    def test_details_page_status_code(self):
+        url = reverse("snack_detail", args=(self.new_snack.id,))
+        response = self.client.get(url)
+        self.assertEqual(response.status_code, 200)
+
+    def test_details_page_template(self):
+        url = reverse("snack_detail", args=(self.new_snack.id,))
+        response = self.client.get(url)
+        self.assertTemplateUsed(response, "snack_detail.html")
+        self.assertTemplateUsed(response, "base.html")
+
+    def test_details_page_content(self):
+        url = reverse("snack_detail", args=(self.new_snack.id,))
+        response = self.client.get(url)
+        self.assertContains(response, self.new_snack.name)
